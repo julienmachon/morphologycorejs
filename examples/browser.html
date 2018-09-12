@@ -1,0 +1,47 @@
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+  <script src="js/filepuller.min.js"></script>
+  <script src="../dist/morphologycorejs.js"></script>
+
+  Open JSON morphology file file <input type="file" id="fileInput" multiple>
+
+  <p>Open Javascript console.</p>
+
+  <script>
+
+    let fileInput = document.getElementById('fileInput')
+
+    // manages file input
+    fileInput.addEventListener('change', function(e) {
+      var files = e.target.files;
+      if( !files.length ){
+        return;
+      }
+
+      for(let i=0; i<files.length; i++){
+        filepuller.read( files[i], true, function(error, data){
+          if (error) {
+            console.warn("ERROR" + error)
+            return
+          }
+          readMorphoFile(data)
+        })
+      }
+    })
+
+
+    function readMorphoFile( jsonData ){
+      let rawMorphoObj = JSON.parse( jsonData )
+      console.log( morphologycorejs );
+      let morpho = new morphologycorejs.Morphology()
+      morpho.buildFromRawMorphology( rawMorphoObj )
+      console.log(morpho)
+    }
+
+  </script>
+
+</body>
+</html>
