@@ -18,9 +18,8 @@
   "author": "Jonathan Lurie",
   "license": "MIT",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/preset-env": "^7.0.0",
     "documentation": "^8.1.2",
     "rollup": "^0.65.2",
     "rollup-plugin-babel": "^4.0.3",

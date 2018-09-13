@@ -13,7 +13,15 @@
    */
   class Section {
 
-    constructor () {
+
+    /**
+     * To construct a section, we need a reference to the morphology instance that
+     * 'hosts' them. This may seem a bit a bit counter intuitive to have a reference
+     * in that direction but it can be very convenient, when knowing a section, to
+     * know to which morphology it belongs (i.e. raycasting a section)
+     * @param {Morphology} morphology - the Morphology instance that host _this_ section
+     */
+    constructor (morphology=null) {
       this._id = null;
       this._parent = null;
       this._children = [];
@@ -21,6 +29,7 @@
       this._typevalue = null;
       this._points = null;
       this._radiuses = null;
+      this._morphology = morphology;
     }
 
 
@@ -44,6 +53,38 @@
     }
 
 
+    setTypename (tn) {
+      // TODO: use a table that makes the relation bt typevalue and typename
+      this._typename = tn;
+    }
+
+    getTypename () {
+      return this._typename
+    }
+
+
+    setTypeValue (tv) {
+      this._typevalue = tv;
+    }
+
+    getTypevalue () {
+      return this._typevalue
+    }
+
+
+    addPoint (x, y, z, r=1) {
+      this._points.push( [x, y, z] );
+      this._radiuses.push( r );
+    }
+
+    getPoints () {
+      return this._points
+    }
+
+    getRadiuses () {
+      return this._radiuses
+    }
+
     /**
      * Build a section using a raw section object.
      * @param {Object} rawSection - usually comes from a JSON file
@@ -52,7 +93,7 @@
       this._id = rawSection.id;
       this._typename = rawSection.typename;
       this._typevalue = rawSection.typevalue;
-      this._points = rawSection.points.map( function(p){return p.positions});
+      this._points = rawSection.points.map( function(p){return p.position});
       this._radiuses = rawSection.points.map( function(p){return p.radius});
 
       return this._id
@@ -159,6 +200,25 @@
     }
 
 
+    setCenter (x, y, z) {
+      this._center = [x, y, z];
+    }
+
+
+    getCenter () {
+      return this._center
+    }
+
+
+    setRadius (r) {
+      this._radius = r;
+    }
+
+
+    getRadius () {
+      return this._radius
+    }
+
     /**
      * Build a soma using a raw soma object.
      * @param {Object} rawSoma - usually comes from a JSON file
@@ -245,6 +305,45 @@
       // TODO
     }
 
+
+    /**
+     * Retrieve the total number of section in this morphology
+     * @return {Number}
+     */
+    getNumberOfSections () {
+      return Object.keys( this._sections )
+    }
+
+
+    /**
+     * Get a section, given its id
+     * @param {String|Number} id - the id of a section
+     * @return {Section|null} the requested section or null if the id is invalid
+     */
+    getSection (id) {
+      if (id in this._sections) {
+        return this._sections[id]
+      }else{
+        return null
+      }
+    }
+
+
+    /**
+     * Get all the sections of _this_ morphology as an array, because sometimes it's
+     * more convenient for iterating.
+     * @return {Array} array of Section instances
+     */
+    getArrayOfSections () {
+      return Object.values( this._sections )
+    }
+
+
+    getSoma () {
+      return this._soma
+    }
+
+    
   }
 
   exports.Morphology = Morphology;
@@ -252,4 +351,3 @@
   Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-//# sourceMappingURL=morphologycorejs.js.map

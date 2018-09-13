@@ -8,7 +8,15 @@
  */
 class Section {
 
-  constructor () {
+
+  /**
+   * To construct a section, we need a reference to the morphology instance that
+   * 'hosts' them. This may seem a bit a bit counter intuitive to have a reference
+   * in that direction but it can be very convenient, when knowing a section, to
+   * know to which morphology it belongs (i.e. raycasting a section)
+   * @param {Morphology} morphology - the Morphology instance that host _this_ section
+   */
+  constructor (morphology=null) {
     this._id = null
     this._parent = null
     this._children = []
@@ -16,6 +24,7 @@ class Section {
     this._typevalue = null
     this._points = null
     this._radiuses = null
+    this._morphology = morphology
   }
 
 
@@ -40,6 +49,42 @@ class Section {
 
 
   /**
+   * Define the typename
+   * @param {}
+   */
+  setTypename (tn) {
+    // TODO: use a table that makes the relation bt typevalue and typename
+    this._typename = tn
+  }
+
+  getTypename () {
+    return this._typename
+  }
+
+
+  setTypeValue (tv) {
+    this._typevalue = tv
+  }
+
+  getTypevalue () {
+    return this._typevalue
+  }
+
+
+  addPoint (x, y, z, r=1) {
+    this._points.push( [x, y, z] )
+    this._radiuses.push( r )
+  }
+
+  getPoints () {
+    return this._points
+  }
+
+  getRadiuses () {
+    return this._radiuses
+  }
+
+  /**
    * Build a section using a raw section object.
    * @param {Object} rawSection - usually comes from a JSON file
    */
@@ -47,7 +92,7 @@ class Section {
     this._id = rawSection.id
     this._typename = rawSection.typename
     this._typevalue = rawSection.typevalue
-    this._points = rawSection.points.map( function(p){return p.positions})
+    this._points = rawSection.points.map( function(p){return p.position})
     this._radiuses = rawSection.points.map( function(p){return p.radius})
 
     return this._id

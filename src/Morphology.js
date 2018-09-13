@@ -75,6 +75,45 @@ class Morphology {
     // TODO
   }
 
+
+  /**
+   * Retrieve the total number of section in this morphology
+   * @return {Number}
+   */
+  getNumberOfSections () {
+    return Object.keys( this._sections )
+  }
+
+
+  /**
+   * Get a section, given its id
+   * @param {String|Number} id - the id of a section
+   * @return {Section|null} the requested section or null if the id is invalid
+   */
+  getSection (id) {
+    if (id in this._sections) {
+      return this._sections[id]
+    }else{
+      return null
+    }
+  }
+
+
+  /**
+   * Get all the sections of _this_ morphology as an array, because sometimes it's
+   * more convenient for iterating.
+   * @return {Array} array of Section instances
+   */
+  getArrayOfSections () {
+    return Object.values( this._sections )
+  }
+
+
+  getSoma () {
+    return this._soma
+  }
+
+  
 }
 
 export { Morphology }

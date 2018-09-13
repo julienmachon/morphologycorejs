@@ -32,6 +32,25 @@ class Soma {
   }
 
 
+  setCenter (x, y, z) {
+    this._center = [x, y, z]
+  }
+
+
+  getCenter () {
+    return this._center
+  }
+
+
+  setRadius (r) {
+    this._radius = r
+  }
+
+
+  getRadius () {
+    return this._radius
+  }
+
   /**
    * Build a soma using a raw soma object.
    * @param {Object} rawSoma - usually comes from a JSON file
