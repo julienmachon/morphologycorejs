@@ -53,6 +53,10 @@
     }
 
 
+    /**
+     * Define the typename
+     * @param { }
+     */
     setTypename (tn) {
       // TODO: use a table that makes the relation bt typevalue and typename
       this._typename = tn;
@@ -118,6 +122,11 @@
     }
 
 
+    getParent () {
+      return this._parent
+    }
+
+
     /**
      * Make a given section the child of _this_ one.
      * Two verifications are perfomed before: ids must be diferent so that we are
@@ -176,7 +185,7 @@
       this._id = null;
       this._typename = "soma";
       this._typevalue = 1;
-      this._center = null;
+      this._points = [];
       this._radius = null;
     }
 
@@ -200,15 +209,14 @@
     }
 
 
-    setCenter (x, y, z) {
-      this._center = [x, y, z];
+    addPoint (x, y, z) {
+      this._points.push( [x, y, z]);
     }
 
 
-    getCenter () {
-      return this._center
+    getPoints () {
+      return this._points
     }
-
 
     setRadius (r) {
       this._radius = r;
@@ -225,7 +233,7 @@
      */
     initWithRawSection (rawSoma) {
       this._id = rawSoma.id;
-      this._center = rawSoma.center;
+      this._points = rawSoma.points.map( function(p){return p.position});
       this._radius = rawSoma.radius;
 
       return this._id

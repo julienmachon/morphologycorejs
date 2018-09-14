@@ -50,7 +50,7 @@ class Section {
 
   /**
    * Define the typename
-   * @param {}
+   * @param { }
    */
   setTypename (tn) {
     // TODO: use a table that makes the relation bt typevalue and typename
@@ -114,6 +114,11 @@ class Section {
 
     console.warn( "A section cannot be the parent of itself.")
     return false
+  }
+
+
+  getParent () {
+    return this._parent
   }
 
 

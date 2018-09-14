@@ -8,7 +8,7 @@ class Soma {
     this._id = null
     this._typename = "soma"
     this._typevalue = 1
-    this._center = null
+    this._points = []
     this._radius = null
   }
 
@@ -32,15 +32,14 @@ class Soma {
   }
 
 
-  setCenter (x, y, z) {
-    this._center = [x, y, z]
+  addPoint (x, y, z) {
+    this._points.push( [x, y, z])
   }
 
 
-  getCenter () {
-    return this._center
+  getPoints () {
+    return this._points
   }
-
 
   setRadius (r) {
     this._radius = r
@@ -57,7 +56,7 @@ class Soma {
    */
   initWithRawSection (rawSoma) {
     this._id = rawSoma.id
-    this._center = rawSoma.center
+    this._points = rawSoma.points.map( function(p){return p.position})
     this._radius = rawSoma.radius
 
     return this._id
