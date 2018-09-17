@@ -4,6 +4,13 @@
   (factory((global.morphologycorejs = {})));
 }(this, (function (exports) { 'use strict';
 
+  /*
+  * Author   Jonathan Lurie - http://me.jonathanlurie.fr
+  * License  Apache License 2.0
+  * Lab      Blue Brain Project, EPFL
+  */
+
+
   /**
    * A section is a list of 3D points and some metadata. A section can have one parent
    * and multiple children when the dendrite or axone divide into mutliple dendrites
@@ -30,6 +37,34 @@
       this._points = null;
       this._radiuses = null;
       this._morphology = morphology;
+
+
+      /*
+      Standardized swc files (www.neuromorpho.org)
+      0 - undefined
+      1 - soma
+      2 - axon
+      3 - (basal) dendrite
+      4 - apical dendrite
+      5+ - custom
+      */
+      this._typevalueToTypename = {
+        "0" : "undefined",
+        "1" : "soma",
+        "2" : "axon",
+        "3" : "basal_dendrite",
+        "4" : "apical_dendrite",
+        "5" : "custom"
+      };
+
+      this._typenameToTypevalue = {
+        "undefined" : 0,
+        "soma" : 1,
+        "axon" : 2,
+        "basal_dendrite" : 3,
+        "apical_dendrite" : 4,
+        "custom" : 5
+      };
     }
 
 
@@ -54,40 +89,92 @@
 
 
     /**
-     * Define the typename
-     * @param { }
+     * Define the typename, like in the SWC spec. Must be one of:
+     *  - "undefined"
+     *  - "soma" (even though this one should be used to build a Soma instance)
+     *  - "axon"
+     *  - "basal_dendrite"
+     *  - "apical_dendrite"
+     *  - "custom"
+     * Not that this method automaically sets the typevalue accordingly.
+     * For more info, go to http://www.neuronland.org/NLMorphologyConverter/MorphologyFormats/SWC/Spec.html
+     * @param {String} tn - the typename
      */
     setTypename (tn) {
-      // TODO: use a table that makes the relation bt typevalue and typename
-      this._typename = tn;
+      if (tn in this._typenameToTypevalue) {
+        this._typename = tn;
+        this._typevalue = this._typenameToTypevalue[tn];
+      } else {
+        console.warn( "The typename must be one of " + Object.key(this._typenameToTypevalue).join(" ") );
+      }
     }
 
+
+    /**
+     * Get the typename as a String
+     * @return {String}
+     */
     getTypename () {
       return this._typename
     }
 
 
+    /**
+     * Defnies the typevalue, which is the integer that goes in pair with the type name.
+     * According to SWC spec. Must be one of:
+     * - 0, for undefined
+     * - 1, for soma (even though this one should be used to build a Soma instance)
+     * - 2, for axon
+     * - 3, for basal dendrite
+     * - 4, for apical dendrite
+     * - 5, for custom
+     * Note that defining the type value will automatically set the type name accordingly.
+     * @param {Number} tv - the type value
+     */
     setTypeValue (tv) {
       this._typevalue = tv;
     }
 
+
+    /**
+     * Get the type value
+     * @return {Number}
+     */
     getTypevalue () {
       return this._typevalue
     }
 
 
+    /**
+     * Add a point to _this_ current section
+     * @param {Number} x - the x coordinate of the point to add
+     * @param {Number} y - the y coordinate of the point to add
+     * @param {Number} z - the z coordinate of the point to add
+     * @param {Number} r - the radius at the point to add. (default: 1)
+     */
     addPoint (x, y, z, r=1) {
       this._points.push( [x, y, z] );
       this._radiuses.push( r );
     }
 
+
+    /**
+     * Get all the points of _this_ section as an array
+     * @return {Array} each element are of form [x: Number, y: Number, y: Number]
+     */
     getPoints () {
       return this._points
     }
 
+
+    /**
+     * Get all the radiuses of the point in _this_ section
+     * @return {Array}
+     */
     getRadiuses () {
       return this._radiuses
     }
+
 
     /**
      * Build a section using a raw section object.
@@ -122,6 +209,10 @@
     }
 
 
+    /**
+     * Get the parent section of _this_ section
+     * @return {Section} the parent
+     */
     getParent () {
       return this._parent
     }
@@ -176,6 +267,14 @@
 
   }
 
+  /*
+  * Author   Jonathan Lurie - http://me.jonathanlurie.fr
+  * License  Apache License 2.0
+  * Lab      Blue Brain Project, EPFL
+  */
+
+
+
   /**
    * The soma is the cell body of a neurone and thus is sort of a simplified version
    * of a Section, in term of datastructure.
@@ -209,23 +308,74 @@
     }
 
 
+    /**
+     * Add a point to the soma description
+     * @param {Number} x - the x coordinate of the point to add
+     * @param {Number} y - the y coordinate of the point to add
+     * @param {Number} z - the z coordinate of the point to add
+     */
     addPoint (x, y, z) {
       this._points.push( [x, y, z]);
     }
 
 
+    /**
+     * Get all the points of the soma
+     * @return {Array} each element of the array if of form [x: Number, y: Number, z: Number]
+     */
     getPoints () {
       return this._points
     }
 
+
+    /**
+     * Define the radius of the soma
+     * @param {Number} r - the radius
+     */
     setRadius (r) {
       this._radius = r;
     }
 
 
+    /**
+     * Get the radius of the soma.
+     * @return {Number}
+     */
     getRadius () {
       return this._radius
     }
+
+
+    /**
+     * Return the center of the soma.
+     * If the soma is made of a single point and a radius, this method returns the
+     * single point. If the soma is made of several points, this method returns the
+     * average.
+     * @return {Array|null} coordinate of the center as [x: Number, y: Number, z: Number]
+     */
+    getCenter () {
+      let nbPoints = this._points.length;
+
+      if (nbPoints === 1) {
+        return this._points[0].slice()
+      } else if (nbPoints > 1){
+
+        let average = [0, 0, 0];
+        for (let i=0; i<nbPoints; i++) {
+          average[0] += this._points[i][0];
+          average[1] += this._points[i][1];
+          average[2] += this._points[i][2];
+        }
+        average[0] /= nbPoints;
+        average[1] /= nbPoints;
+        average[2] /= nbPoints;
+        return average
+
+      } else {
+        return null
+      }
+    }
+
 
     /**
      * Build a soma using a raw soma object.
@@ -239,6 +389,13 @@
       return this._id
     }
   }
+
+  /*
+  * Author   Jonathan Lurie - http://me.jonathanlurie.fr
+  * License  Apache License 2.0
+  * Lab      Blue Brain Project, EPFL
+  */
+
 
   /**
    * A morphology is the data representation of a neurone's anatomy. It is composed
@@ -307,10 +464,6 @@
           currentSection.addChild( children[c] );
         }
       }
-
-
-      // Build the Soma instance
-      // TODO
     }
 
 
@@ -351,7 +504,7 @@
       return this._soma
     }
 
-    
+
   }
 
   exports.Morphology = Morphology;

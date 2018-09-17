@@ -1,3 +1,10 @@
+/*
+* Author   Jonathan Lurie - http://me.jonathanlurie.fr
+* License  Apache License 2.0
+* Lab      Blue Brain Project, EPFL
+*/
+
+
 import { Section } from './Section.js'
 import { Soma } from './Soma.js'
 
@@ -69,10 +76,6 @@ class Morphology {
         currentSection.addChild( children[c] )
       }
     }
-
-
-    // Build the Soma instance
-    // TODO
   }
 
 
@@ -113,7 +116,7 @@ class Morphology {
     return this._soma
   }
 
-  
+
 }
 
 export { Morphology }

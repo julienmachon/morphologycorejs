@@ -8,24 +8,47 @@
     -   [getId][4]
     -   [buildFromRawMorphology][5]
         -   [Parameters][6]
--   [Section][7]
-    -   [setId][8]
+    -   [getNumberOfSections][7]
+    -   [getSection][8]
         -   [Parameters][9]
-    -   [getId][10]
-    -   [initWithRawSection][11]
-        -   [Parameters][12]
-    -   [setParent][13]
+    -   [getArrayOfSections][10]
+-   [Section][11]
+    -   [Parameters][12]
+    -   [setId][13]
         -   [Parameters][14]
-    -   [addChild][15]
-        -   [Parameters][16]
-    -   [hasChild][17]
-        -   [Parameters][18]
--   [Soma][19]
-    -   [setId][20]
-        -   [Parameters][21]
-    -   [getId][22]
-    -   [initWithRawSection][23]
-        -   [Parameters][24]
+    -   [getId][15]
+    -   [setTypename][16]
+        -   [Parameters][17]
+    -   [getTypename][18]
+    -   [setTypeValue][19]
+        -   [Parameters][20]
+    -   [getTypevalue][21]
+    -   [addPoint][22]
+        -   [Parameters][23]
+    -   [getPoints][24]
+    -   [getRadiuses][25]
+    -   [initWithRawSection][26]
+        -   [Parameters][27]
+    -   [setParent][28]
+        -   [Parameters][29]
+    -   [getParent][30]
+    -   [addChild][31]
+        -   [Parameters][32]
+    -   [hasChild][33]
+        -   [Parameters][34]
+-   [Soma][35]
+    -   [setId][36]
+        -   [Parameters][37]
+    -   [getId][38]
+    -   [addPoint][39]
+        -   [Parameters][40]
+    -   [getPoints][41]
+    -   [setRadius][42]
+        -   [Parameters][43]
+    -   [getRadius][44]
+    -   [getCenter][45]
+    -   [initWithRawSection][46]
+        -   [Parameters][47]
 
 ## Morphology
 
@@ -40,13 +63,13 @@ Set the ID of _this_ morphology
 
 #### Parameters
 
--   `id` **([String][25] \| [Number][26])** the id
+-   `id` **([String][48] \| [Number][49])** the id
 
 ### getId
 
 Get the ID of _this_ morphology
 
-Returns **([String][25] \| [Number][26])** 
+Returns **([String][48] \| [Number][49])** 
 
 ### buildFromRawMorphology
 
@@ -56,6 +79,29 @@ Build a morphology from a raw dataset, that usually comes from a JSON file.
 
 -   `rawMorphology`  
 
+### getNumberOfSections
+
+Retrieve the total number of section in this morphology
+
+Returns **[Number][49]** 
+
+### getSection
+
+Get a section, given its id
+
+#### Parameters
+
+-   `id` **([String][48] \| [Number][49])** the id of a section
+
+Returns **([Section][50] | null)** the requested section or null if the id is invalid
+
+### getArrayOfSections
+
+Get all the sections of _this_ morphology as an array, because sometimes it's
+more convenient for iterating.
+
+Returns **[Array][51]** array of Section instances
+
 ## Section
 
 A section is a list of 3D points and some metadata. A section can have one parent
@@ -63,6 +109,10 @@ and multiple children when the dendrite or axone divide into mutliple dendrites
 and axons.
 A section instance can be built from scratch of it can be built using a raw object,
 usually from a JSON description.
+
+### Parameters
+
+-   `morphology` **[Morphology][52]** the Morphology instance that host _this_ section (optional, default `null`)
 
 ### setId
 
@@ -72,13 +122,82 @@ sections already have ids and chance to messup the id game are pretty high.
 
 #### Parameters
 
--   `id` **([String][25] \| [Number][26])** the id
+-   `id` **([String][48] \| [Number][49])** the id
 
 ### getId
 
 Get the id of _this_ section
 
-Returns **([String][25] \| [Number][26])** 
+Returns **([String][48] \| [Number][49])** 
+
+### setTypename
+
+Define the typename, like in the SWC spec. Must be one of:
+
+-   "undefined"
+-   "soma" (even though this one should be used to build a Soma instance)
+-   "axon"
+-   "basal_dendrite"
+-   "apical_dendrite"
+-   "custom"
+    Not that this method automaically sets the typevalue accordingly.
+    For more info, go to [http://www.neuronland.org/NLMorphologyConverter/MorphologyFormats/SWC/Spec.html][53]
+
+#### Parameters
+
+-   `tn` **[String][48]** the typename
+
+### getTypename
+
+Get the typename as a String
+
+Returns **[String][48]** 
+
+### setTypeValue
+
+Defnies the typevalue, which is the integer that goes in pair with the type name.
+According to SWC spec. Must be one of:
+
+-   0, for undefined
+-   1, for soma (even though this one should be used to build a Soma instance)
+-   2, for axon
+-   3, for basal dendrite
+-   4, for apical dendrite
+-   5, for custom
+    Note that defining the type value will automatically set the type name accordingly.
+
+#### Parameters
+
+-   `tv` **[Number][49]** the type value
+
+### getTypevalue
+
+Get the type value
+
+Returns **[Number][49]** 
+
+### addPoint
+
+Add a point to _this_ current section
+
+#### Parameters
+
+-   `x` **[Number][49]** the x coordinate of the point to add
+-   `y` **[Number][49]** the y coordinate of the point to add
+-   `z` **[Number][49]** the z coordinate of the point to add
+-   `r` **[Number][49]** the radius at the point to add. (default: 1) (optional, default `1`)
+
+### getPoints
+
+Get all the points of _this_ section as an array
+
+Returns **[Array][51]** each element are of form [x: Number, y: Number, y: Number]
+
+### getRadiuses
+
+Get all the radiuses of the point in _this_ section
+
+Returns **[Array][51]** 
 
 ### initWithRawSection
 
@@ -86,7 +205,7 @@ Build a section using a raw section object.
 
 #### Parameters
 
--   `rawSection` **[Object][27]** usually comes from a JSON file
+-   `rawSection` **[Object][54]** usually comes from a JSON file
 
 ### setParent
 
@@ -96,9 +215,15 @@ as its own parent.
 
 #### Parameters
 
--   `section` **[Section][28]** the section that is the parent of this one
+-   `section` **[Section][50]** the section that is the parent of this one
 
-Returns **[Boolean][29]** true if parent was successfully defined, false if not.
+Returns **[Boolean][55]** true if parent was successfully defined, false if not.
+
+### getParent
+
+Get the parent section of _this_ section
+
+Returns **[Section][50]** the parent
 
 ### addChild
 
@@ -109,9 +234,9 @@ does not already have the given section as a children (=> avoid doublons)
 
 #### Parameters
 
--   `section` **[Section][28]** The section to add as a child
+-   `section` **[Section][50]** The section to add as a child
 
-Returns **[Boolean][29]** true if successfully added (of if already has the given child),
+Returns **[Boolean][55]** true if successfully added (of if already has the given child),
 false if the candidate cannot be a child
 
 ### hasChild
@@ -120,9 +245,9 @@ Checks if a given section is already one of the children of _this_ section
 
 #### Parameters
 
--   `section` **[Section][28]** a section to test
+-   `section` **[Section][50]** a section to test
 
-Returns **[Boolean][29]** true if the given section is already a child of _this_ section, false if not.
+Returns **[Boolean][55]** true if the given section is already a child of _this_ section, false if not.
 
 ## Soma
 
@@ -137,13 +262,52 @@ sections already have ids and chance to messup the id game are pretty high.
 
 #### Parameters
 
--   `id` **([String][25] \| [Number][26])** the id
+-   `id` **([String][48] \| [Number][49])** the id
 
 ### getId
 
 Get the id of _this_ soma
 
-Returns **([String][25] \| [Number][26])** 
+Returns **([String][48] \| [Number][49])** 
+
+### addPoint
+
+Add a point to the soma description
+
+#### Parameters
+
+-   `x` **[Number][49]** the x coordinate of the point to add
+-   `y` **[Number][49]** the y coordinate of the point to add
+-   `z` **[Number][49]** the z coordinate of the point to add
+
+### getPoints
+
+Get all the points of the soma
+
+Returns **[Array][51]** each element of the array if of form [x: Number, y: Number, z: Number]
+
+### setRadius
+
+Define the radius of the soma
+
+#### Parameters
+
+-   `r` **[Number][49]** the radius
+
+### getRadius
+
+Get the radius of the soma.
+
+Returns **[Number][49]** 
+
+### getCenter
+
+Return the center of the soma.
+If the soma is made of a single point and a radius, this method returns the
+single point. If the soma is made of several points, this method returns the
+average.
+
+Returns **([Array][51] | null)** coordinate of the center as [x: Number, y: Number, z: Number]
 
 ### initWithRawSection
 
@@ -151,7 +315,7 @@ Build a soma using a raw soma object.
 
 #### Parameters
 
--   `rawSoma` **[Object][27]** usually comes from a JSON file
+-   `rawSoma` **[Object][54]** usually comes from a JSON file
 
 [1]: #morphology
 
@@ -165,48 +329,100 @@ Build a soma using a raw soma object.
 
 [6]: #parameters-1
 
-[7]: #section
+[7]: #getnumberofsections
 
-[8]: #setid-1
+[8]: #getsection
 
 [9]: #parameters-2
 
-[10]: #getid-1
+[10]: #getarrayofsections
 
-[11]: #initwithrawsection
+[11]: #section
 
 [12]: #parameters-3
 
-[13]: #setparent
+[13]: #setid-1
 
 [14]: #parameters-4
 
-[15]: #addchild
+[15]: #getid-1
 
-[16]: #parameters-5
+[16]: #settypename
 
-[17]: #haschild
+[17]: #parameters-5
 
-[18]: #parameters-6
+[18]: #gettypename
 
-[19]: #soma
+[19]: #settypevalue
 
-[20]: #setid-2
+[20]: #parameters-6
 
-[21]: #parameters-7
+[21]: #gettypevalue
 
-[22]: #getid-2
+[22]: #addpoint
 
-[23]: #initwithrawsection-1
+[23]: #parameters-7
 
-[24]: #parameters-8
+[24]: #getpoints
 
-[25]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[25]: #getradiuses
 
-[26]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[26]: #initwithrawsection
 
-[27]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[27]: #parameters-8
 
-[28]: #section
+[28]: #setparent
 
-[29]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[29]: #parameters-9
+
+[30]: #getparent
+
+[31]: #addchild
+
+[32]: #parameters-10
+
+[33]: #haschild
+
+[34]: #parameters-11
+
+[35]: #soma
+
+[36]: #setid-2
+
+[37]: #parameters-12
+
+[38]: #getid-2
+
+[39]: #addpoint-1
+
+[40]: #parameters-13
+
+[41]: #getpoints-1
+
+[42]: #setradius
+
+[43]: #parameters-14
+
+[44]: #getradius
+
+[45]: #getcenter
+
+[46]: #initwithrawsection-1
+
+[47]: #parameters-15
+
+[48]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[49]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[50]: #section
+
+[51]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[52]: #morphology
+
+[53]: http://www.neuronland.org/NLMorphologyConverter/MorphologyFormats/SWC/Spec.html
+
+[54]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[55]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean

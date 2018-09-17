@@ -1,3 +1,10 @@
+/*
+* Author   Jonathan Lurie - http://me.jonathanlurie.fr
+* License  Apache License 2.0
+* Lab      Blue Brain Project, EPFL
+*/
+
+
 
 /**
  * The soma is the cell body of a neurone and thus is sort of a simplified version
@@ -32,23 +39,74 @@ class Soma {
   }
 
 
+  /**
+   * Add a point to the soma description
+   * @param {Number} x - the x coordinate of the point to add
+   * @param {Number} y - the y coordinate of the point to add
+   * @param {Number} z - the z coordinate of the point to add
+   */
   addPoint (x, y, z) {
     this._points.push( [x, y, z])
   }
 
 
+  /**
+   * Get all the points of the soma
+   * @return {Array} each element of the array if of form [x: Number, y: Number, z: Number]
+   */
   getPoints () {
     return this._points
   }
 
+
+  /**
+   * Define the radius of the soma
+   * @param {Number} r - the radius
+   */
   setRadius (r) {
     this._radius = r
   }
 
 
+  /**
+   * Get the radius of the soma.
+   * @return {Number}
+   */
   getRadius () {
     return this._radius
   }
+
+
+  /**
+   * Return the center of the soma.
+   * If the soma is made of a single point and a radius, this method returns the
+   * single point. If the soma is made of several points, this method returns the
+   * average.
+   * @return {Array|null} coordinate of the center as [x: Number, y: Number, z: Number]
+   */
+  getCenter () {
+    let nbPoints = this._points.length
+
+    if (nbPoints === 1) {
+      return this._points[0].slice()
+    } else if (nbPoints > 1){
+
+      let average = [0, 0, 0]
+      for (let i=0; i<nbPoints; i++) {
+        average[0] += this._points[i][0]
+        average[1] += this._points[i][1]
+        average[2] += this._points[i][2]
+      }
+      average[0] /= nbPoints
+      average[1] /= nbPoints
+      average[2] /= nbPoints
+      return average
+
+    } else {
+      return null
+    }
+  }
+
 
   /**
    * Build a soma using a raw soma object.
