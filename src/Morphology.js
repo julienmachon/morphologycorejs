@@ -21,6 +21,10 @@ class Morphology {
     this._id = null
     this._sections = {}
     this._soma = null
+
+    // these are catgories of sections that we may need. Look at `getOrphanSections`
+    // and `_findSpecialSection`
+    this._specialSections = {}
   }
 
 
@@ -112,10 +116,62 @@ class Morphology {
   }
 
 
+  /**
+   * Get the soma Object
+   * @return {Soma}
+   */
   getSoma () {
     return this._soma
   }
 
+
+  /**
+   * Get all the section with no parent (_parent = null)
+   * Those are directly tied to the soma
+   * @param {Boolean} force - if true, the fetching among the sections will be done again
+   * @return {Array} array of Sections
+   */
+  getOrphanSections (force=false) {
+    let speciality = "orphans"
+
+    // extract, if not done before
+    this._findSpecialSection(
+      "orphans",
+      function(s){
+        return !s.getParent()
+      },
+      force
+    )
+
+    return this._specialSections[speciality]
+  }
+
+
+
+  /**
+   * @private
+   * Helper function to build a subset of Sections based on the selections perfomed by `selector`
+   * @param {String} specialityName - name of the spaciality
+   * @param {Function} selector - function that takes a Section and returns a boolean.
+   * if true is return, a section will be selected
+   * @param {Boolean} force - if true: rebuild the list, if false: just return the list previously build
+   */
+  _findSpecialSection (specialityName, selector, force=false) {
+    if (!(specialityName in this._specialSections)) {
+      this._specialSections[specialityName] = null
+    }
+
+    if (force || !this._specialSections[specialityName]) {
+      this._specialSections[specialityName] = []
+      let allSections = Object.values( this._sections )
+      for (let i=0; i<allSections.length; i++) {
+        if (selector(allSections[i])) {
+          this._specialSections[specialityName].push(allSections[i])
+        }
+      }
+    }
+    return this._specialSections[specialityName]
+  }
 
 }
 

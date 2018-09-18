@@ -1,7 +1,7 @@
 {
   "name": "morphologycorejs",
-  "version": "0.1.0",
-  "description": "A starting point to create ES6 module for browser",
+  "version": "0.1.1",
+  "description": "The description of a neuron morphology",
   "repository": "jonathanlurie/morphologycorejs",
   "moduleName": "morphologycorejs",
   "entry": "src/main.js",

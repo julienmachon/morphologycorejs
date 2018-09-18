@@ -9,6 +9,9 @@
 /**
  * The soma is the cell body of a neurone and thus is sort of a simplified version
  * of a Section, in term of datastructure.
+ * A soma can be made of a single point (then it's just a center point) or of several,
+ * then it's a more accurate description of a soma. When described with several points,
+ * the representation is usually as a 2D polygon (even though it's in a 3D space)
  */
 class Soma {
   constructor () {
