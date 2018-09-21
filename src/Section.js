@@ -176,10 +176,15 @@ class Section {
    */
   initWithRawSection (rawSection) {
     this._id = rawSection.id
-    this._typename = rawSection.typename
-    this._typevalue = rawSection.typevalue
+
     this._points = rawSection.points.map( function(p){return p.position})
     this._radiuses = rawSection.points.map( function(p){return p.radius})
+
+    // in some cases, we have only the typename or the typevalue, in this case we perform  a lookup
+    if (rawSection.typename || rawSection.typevalue) {
+      this._typename = rawSection.typename || this._typevalueToTypename[rawSection.typevalue]
+      this._typevalue = rawSection.typevalue || this._typenameToTypevalue[rawSection.typename]
+    }
 
     return this._id
   }
