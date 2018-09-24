@@ -70,7 +70,7 @@ class Morphology {
       let currentSection = this._sections[ currentRawSection.id ]
 
       // adding a parent if there is one
-      if (currentRawSection.parent){
+      if (currentRawSection.parent !== null){ // can be 0 but cannot be null (in JS, 0 and null are diff)
         let parent = this._sections[ currentRawSection.parent ]
         currentSection.setParent( parent )
       }
