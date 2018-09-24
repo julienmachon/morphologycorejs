@@ -11,6 +11,34 @@
   */
 
 
+  /*
+  Standardized swc files (www.neuromorpho.org)
+  0 - undefined
+  1 - soma
+  2 - axon
+  3 - (basal) dendrite
+  4 - apical dendrite
+  5+ - custom
+  */
+  const TYPEVALUE_2_TYPENAME = {
+    "0" : "undefined",
+    "1" : "soma",
+    "2" : "axon",
+    "3" : "basal_dendrite",
+    "4" : "apical_dendrite",
+    "5" : "custom"
+  };
+
+  const TYPENAME_2_TYPEVALUE = {
+    "undefined" : 0,
+    "soma" : 1,
+    "axon" : 2,
+    "basal_dendrite" : 3,
+    "apical_dendrite" : 4,
+    "custom" : 5
+  };
+
+
   /**
    * A section is a list of 3D points and some metadata. A section can have one parent
    * and multiple children when the dendrite or axone divide into mutliple dendrites
@@ -37,34 +65,6 @@
       this._points = null;
       this._radiuses = null;
       this._morphology = morphology;
-
-
-      /*
-      Standardized swc files (www.neuromorpho.org)
-      0 - undefined
-      1 - soma
-      2 - axon
-      3 - (basal) dendrite
-      4 - apical dendrite
-      5+ - custom
-      */
-      this._typevalueToTypename = {
-        "0" : "undefined",
-        "1" : "soma",
-        "2" : "axon",
-        "3" : "basal_dendrite",
-        "4" : "apical_dendrite",
-        "5" : "custom"
-      };
-
-      this._typenameToTypevalue = {
-        "undefined" : 0,
-        "soma" : 1,
-        "axon" : 2,
-        "basal_dendrite" : 3,
-        "apical_dendrite" : 4,
-        "custom" : 5
-      };
     }
 
 
@@ -101,11 +101,11 @@
      * @param {String} tn - the typename
      */
     setTypename (tn) {
-      if (tn in this._typenameToTypevalue) {
+      if (tn in TYPENAME_2_TYPEVALUE) {
         this._typename = tn;
-        this._typevalue = this._typenameToTypevalue[tn];
+        this._typevalue = TYPENAME_2_TYPEVALUE[tn];
       } else {
-        console.warn( "The typename must be one of " + Object.key(this._typenameToTypevalue).join(" ") );
+        console.warn( "The typename must be one of " + Object.key(TYPENAME_2_TYPEVALUE).join(" ") );
       }
     }
 
@@ -188,8 +188,8 @@
 
       // in some cases, we have only the typename or the typevalue, in this case we perform  a lookup
       if (rawSection.typename || rawSection.typevalue) {
-        this._typename = rawSection.typename || this._typevalueToTypename[rawSection.typevalue];
-        this._typevalue = rawSection.typevalue || this._typenameToTypevalue[rawSection.typename];
+        this._typename = rawSection.typename || TYPEVALUE_2_TYPENAME[rawSection.typevalue];
+        this._typevalue = rawSection.typevalue || TYPENAME_2_TYPEVALUE[rawSection.typename];
       }
 
       return this._id
