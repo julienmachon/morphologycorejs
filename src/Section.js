@@ -264,6 +264,41 @@ class Section {
   }
 
 
+  /**
+   * Get the size of _this_ section
+   * @return {Number}
+   */
+  getSize () {
+    let sum = 0
+    for (let i=0; i<this._points.length-1; i++) {
+      let p1 = this._points[i]
+      let p2 = this._points[i+1]
+      let dx = p1[0] - p2[0]
+      let dy = p1[1] - p2[1]
+      let dz = p1[2] - p2[2]
+      sum += Math.sqrt( dx*dx + dy*dy + dz*dz )
+    }
+
+    return sum
+  }
+
+
+  /**
+   * Get the morphology object that contains this section
+   * @return {Morphology}
+   */
+  getMorphology () {
+    return this._morphology
+  }
+
+
+  /**
+   * Get all the children as an Array
+   * @return {Array}
+   */
+  getChildren () {
+    return this._children
+  }
 }
 
 export { Section }
