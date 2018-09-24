@@ -59,7 +59,7 @@ class Morphology {
     // Build the Section instances.
     // This first step does not define parents nor children
     for (let i=0; i<rawMorphology.sections.length; i++) {
-      let s = new Section()
+      let s = new Section(this)
       let sId = s.initWithRawSection( rawMorphology.sections[i] )
       this._sections[ sId ] = s
     }
