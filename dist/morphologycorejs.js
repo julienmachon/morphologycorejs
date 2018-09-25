@@ -425,6 +425,11 @@
      * @param {Object} rawSoma - usually comes from a JSON file
      */
     initWithRawSection (rawSoma) {
+      if (!rawSoma) {
+        console.warn("Cannot init the Soma instance, no soma data provided in raw morphology.");
+        return
+      }
+
       this._id = rawSoma.id;
       this._points = rawSoma.points.map( function(p){return p.position});
       this._radius = rawSoma.radius;
@@ -479,13 +484,18 @@
 
     /**
      * Build a morphology from a raw dataset, that usually comes from a JSON file.
-     *
+     * Note that some files do not provide any data about the soma. In this case, the Soma
+     * instance remains `null`
+     * @param {Object} rawMorphology - a flat tree description of a morphology
      */
     buildFromRawMorphology (rawMorphology) {
       let that = this;
 
-      this._soma = new Soma();
-      this._soma.initWithRawSection( rawMorphology.soma );
+      // Sometimes, we have no data about the soma
+      if (rawMorphology.soma) {
+        this._soma = new Soma();
+        this._soma.initWithRawSection( rawMorphology.soma );
+      }
 
       // Build the Section instances.
       // This first step does not define parents nor children

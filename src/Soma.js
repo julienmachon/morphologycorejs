@@ -116,6 +116,11 @@ class Soma {
    * @param {Object} rawSoma - usually comes from a JSON file
    */
   initWithRawSection (rawSoma) {
+    if (!rawSoma) {
+      console.warn("Cannot init the Soma instance, no soma data provided in raw morphology.")
+      return
+    }
+
     this._id = rawSoma.id
     this._points = rawSoma.points.map( function(p){return p.position})
     this._radius = rawSoma.radius
