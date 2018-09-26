@@ -301,4 +301,4 @@ class Section {
   }
 }
 
-export { Section }
+export default Section

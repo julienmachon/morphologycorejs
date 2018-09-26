@@ -1,17 +1,17 @@
 {
   "name": "morphologycorejs",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "The description of a neuron morphology",
   "repository": "jonathanlurie/morphologycorejs",
-  "moduleName": "morphologycorejs",
-  "entry": "src/main.js",
-  "main": "dist/morphologycorejs.js",
-  "min": "dist/morphologycorejs.min.js",
+  "main": "lib/morphologycorejs.js",
+  "module": "es/morphologycorejs.js",
+  "unpkg": "dist/morphologycorejs.js",
+  "entry": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rollup -c",
     "dev": "serve -l 5010 . & rollup -w -c rollup.config.dev.js",
-    "doc": "documentation build src/main.js -o ./doc/ -f html; documentation build src/** -f md > documentation.md",
+    "doc": "documentation build src/index.js -o ./doc/ -f html; documentation build src/** -f md > documentation.md",
     "lintfix": "standard --fix src/**/*.js",
     "lint": "standard src/**/*.js"
   },

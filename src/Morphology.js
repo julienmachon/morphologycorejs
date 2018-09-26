@@ -5,8 +5,8 @@
 */
 
 
-import { Section } from './Section.js'
-import { Soma } from './Soma.js'
+import Section from './Section.js'
+import Soma from './Soma.js'
 
 
 /**
@@ -180,4 +180,4 @@ class Morphology {
 
 }
 
-export { Morphology }
+export default Morphology

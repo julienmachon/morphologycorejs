@@ -130,4 +130,4 @@ class Soma {
 }
 
 
-export { Soma }
+export default Soma
