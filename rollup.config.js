@@ -10,7 +10,7 @@ export default [
   {
     input: pkg.entry,
     output: {
-      file: pkg.unpkg + ".js",
+      file: pkg.unpkg,
       name: pkg.name,
       sourcemap: false,
       format: 'umd',
