@@ -4,7 +4,6 @@
 * Lab      Blue Brain Project, EPFL
 */
 
-
 import Section from './Section.js'
 import Soma from './Soma.js'
 

@@ -627,3 +627,4 @@
   return index;
 
 })));
+//# sourceMappingURL=morphologycorejs.js.map
