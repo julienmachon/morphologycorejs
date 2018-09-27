@@ -5,7 +5,6 @@
 */
 
 
-
 /**
  * The soma is the cell body of a neurone and thus is sort of a simplified version
  * of a Section, in term of datastructure.
@@ -14,9 +13,9 @@
  * the representation is usually as a 2D polygon (even though it's in a 3D space)
  */
 class Soma {
-  constructor () {
+  constructor() {
     this._id = null
-    this._typename = "soma"
+    this._typename = 'soma'
     this._typevalue = 1
     this._points = []
     this._radius = null
@@ -28,7 +27,7 @@ class Soma {
    * sections already have ids and chance to messup the id game are pretty high.
    * @param {String|Number} id - the id
    */
-  setId (id) {
+  setId(id) {
     this._id = id
   }
 
@@ -37,7 +36,7 @@ class Soma {
    * Get the id of _this_ soma
    * @return {String|Number}
    */
-  getId () {
+  getId() {
     return this._id
   }
 
@@ -48,8 +47,8 @@ class Soma {
    * @param {Number} y - the y coordinate of the point to add
    * @param {Number} z - the z coordinate of the point to add
    */
-  addPoint (x, y, z) {
-    this._points.push( [x, y, z])
+  addPoint(x, y, z) {
+    this._points.push([x, y, z])
   }
 
 
@@ -57,7 +56,7 @@ class Soma {
    * Get all the points of the soma
    * @return {Array} each element of the array if of form [x: Number, y: Number, z: Number]
    */
-  getPoints () {
+  getPoints() {
     return this._points
   }
 
@@ -66,7 +65,7 @@ class Soma {
    * Define the radius of the soma
    * @param {Number} r - the radius
    */
-  setRadius (r) {
+  setRadius(r) {
     this._radius = r
   }
 
@@ -75,7 +74,7 @@ class Soma {
    * Get the radius of the soma.
    * @return {Number}
    */
-  getRadius () {
+  getRadius() {
     return this._radius
   }
 
@@ -87,15 +86,16 @@ class Soma {
    * average.
    * @return {Array|null} coordinate of the center as [x: Number, y: Number, z: Number]
    */
-  getCenter () {
-    let nbPoints = this._points.length
+  getCenter() {
+    const nbPoints = this._points.length
 
     if (nbPoints === 1) {
       return this._points[0].slice()
-    } else if (nbPoints > 1){
+    }
 
-      let average = [0, 0, 0]
-      for (let i=0; i<nbPoints; i++) {
+    if (nbPoints > 1) {
+      const average = [0, 0, 0]
+      for (let i = 0; i < nbPoints; i += 1) {
         average[0] += this._points[i][0]
         average[1] += this._points[i][1]
         average[2] += this._points[i][2]
@@ -104,10 +104,8 @@ class Soma {
       average[1] /= nbPoints
       average[2] /= nbPoints
       return average
-
-    } else {
-      return null
     }
+    return null
   }
 
 
@@ -115,14 +113,14 @@ class Soma {
    * Build a soma using a raw soma object.
    * @param {Object} rawSoma - usually comes from a JSON file
    */
-  initWithRawSection (rawSoma) {
+  initWithRawSection(rawSoma) {
     if (!rawSoma) {
-      console.warn("Cannot init the Soma instance, no soma data provided in raw morphology.")
-      return
+      console.warn('Cannot init the Soma instance, no soma data provided in raw morphology.')
+      return null
     }
 
     this._id = rawSoma.id
-    this._points = rawSoma.points.map( function(p){return p.position})
+    this._points = rawSoma.points.map(p => p.position)
     this._radius = rawSoma.radius
 
     return this._id

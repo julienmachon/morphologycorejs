@@ -15,21 +15,21 @@ Standardized swc files (www.neuromorpho.org)
 5+ - custom
 */
 const TYPEVALUE_2_TYPENAME = {
-  "0" : "undefined",
-  "1" : "soma",
-  "2" : "axon",
-  "3" : "basal_dendrite",
-  "4" : "apical_dendrite",
-  "5" : "custom"
+  0: 'undefined',
+  1: 'soma',
+  2: 'axon',
+  3: 'basal_dendrite',
+  4: 'apical_dendrite',
+  5: 'custom',
 }
 
 const TYPENAME_2_TYPEVALUE = {
-  "undefined" : 0,
-  "soma" : 1,
-  "axon" : 2,
-  "basal_dendrite" : 3,
-  "apical_dendrite" : 4,
-  "custom" : 5
+  undefined: 0,
+  soma: 1,
+  axon: 2,
+  basal_dendrite: 3,
+  apical_dendrite: 4,
+  custom: 5,
 }
 
 
@@ -41,8 +41,6 @@ const TYPENAME_2_TYPEVALUE = {
  * usually from a JSON description.
  */
 class Section {
-
-
   /**
    * To construct a section, we need a reference to the morphology instance that
    * 'hosts' them. This may seem a bit a bit counter intuitive to have a reference
@@ -50,7 +48,7 @@ class Section {
    * know to which morphology it belongs (i.e. raycasting a section)
    * @param {Morphology} morphology - the Morphology instance that host _this_ section
    */
-  constructor (morphology=null) {
+  constructor(morphology = null) {
     this._id = null
     this._parent = null
     this._children = []
@@ -68,7 +66,7 @@ class Section {
    * sections already have ids and chance to messup the id game are pretty high.
    * @param {String|Number} id - the id
    */
-  setId (id) {
+  setId(id) {
     this._id = id
   }
 
@@ -77,7 +75,7 @@ class Section {
    * Get the id of _this_ section
    * @return {String|Number}
    */
-  getId () {
+  getId() {
     return this._id
   }
 
@@ -94,12 +92,12 @@ class Section {
    * For more info, go to http://www.neuronland.org/NLMorphologyConverter/MorphologyFormats/SWC/Spec.html
    * @param {String} tn - the typename
    */
-  setTypename (tn) {
+  setTypename(tn) {
     if (tn in TYPENAME_2_TYPEVALUE) {
       this._typename = tn
       this._typevalue = TYPENAME_2_TYPEVALUE[tn]
     } else {
-      console.warn( "The typename must be one of " + Object.key(TYPENAME_2_TYPEVALUE).join(" ") )
+      console.warn(`The typename must be one of ${Object.key(TYPENAME_2_TYPEVALUE).join(' ')}`)
     }
   }
 
@@ -108,7 +106,7 @@ class Section {
    * Get the typename as a String
    * @return {String}
    */
-  getTypename () {
+  getTypename() {
     return this._typename
   }
 
@@ -125,7 +123,7 @@ class Section {
    * Note that defining the type value will automatically set the type name accordingly.
    * @param {Number} tv - the type value
    */
-  setTypeValue (tv) {
+  setTypeValue(tv) {
     this._typevalue = tv
   }
 
@@ -134,7 +132,7 @@ class Section {
    * Get the type value
    * @return {Number}
    */
-  getTypevalue () {
+  getTypevalue() {
     return this._typevalue
   }
 
@@ -146,9 +144,9 @@ class Section {
    * @param {Number} z - the z coordinate of the point to add
    * @param {Number} r - the radius at the point to add. (default: 1)
    */
-  addPoint (x, y, z, r=1) {
-    this._points.push( [x, y, z] )
-    this._radiuses.push( r )
+  addPoint(x, y, z, r = 1) {
+    this._points.push([x, y, z])
+    this._radiuses.push(r)
   }
 
 
@@ -156,7 +154,7 @@ class Section {
    * Get all the points of _this_ section as an array
    * @return {Array} each element are of form [x: Number, y: Number, y: Number]
    */
-  getPoints () {
+  getPoints() {
     return this._points
   }
 
@@ -165,7 +163,7 @@ class Section {
    * Get all the radiuses of the point in _this_ section
    * @return {Array}
    */
-  getRadiuses () {
+  getRadiuses() {
     return this._radiuses
   }
 
@@ -174,11 +172,11 @@ class Section {
    * Build a section using a raw section object.
    * @param {Object} rawSection - usually comes from a JSON file
    */
-  initWithRawSection (rawSection) {
+  initWithRawSection(rawSection) {
     this._id = rawSection.id
 
-    this._points = rawSection.points.map( function(p){return p.position})
-    this._radiuses = rawSection.points.map( function(p){return p.radius})
+    this._points = rawSection.points.map(p => p.position)
+    this._radiuses = rawSection.points.map(p => p.radius)
 
     // in some cases, we have only the typename or the typevalue, in this case we perform  a lookup
     if (rawSection.typename || rawSection.typevalue) {
@@ -197,13 +195,13 @@ class Section {
    * @param {Section} section - the section that is the parent of this one
    * @return {Boolean} true if parent was successfully defined, false if not.
    */
-  setParent (section) {
+  setParent(section) {
     if (section && section.getId() !== this._id) {
       this._parent = section
       return true
     }
 
-    console.warn( "A section cannot be the parent of itself.")
+    console.warn('A section cannot be the parent of itself.')
     return false
   }
 
@@ -212,7 +210,7 @@ class Section {
    * Get the parent section of _this_ section
    * @return {Section} the parent
    */
-  getParent () {
+  getParent() {
     return this._parent
   }
 
@@ -226,21 +224,17 @@ class Section {
    * @return {Boolean} true if successfully added (of if already has the given child),
    * false if the candidate cannot be a child
    */
-  addChild (section) {
+  addChild(section) {
     if (section.getId() !== this._id) {
       if (this.hasChild(section)) {
-        console.warn("The given section is already one of the child to this one.")
+        console.warn('The given section is already one of the child to this one.')
       } else {
-        this._children.push( section )
+        this._children.push(section)
       }
       return true
-
-    } else {
-      console.warn("A section cannot be the child of itself.")
-      return false
     }
-
-    return true
+    console.warn('A section cannot be the child of itself.')
+    return false
   }
 
 
@@ -249,17 +243,14 @@ class Section {
    * @param {Section} section - a section to test
    * @return {Boolean} true if the given section is already a child of _this_ section, false if not.
    */
-  hasChild (section) {
-    if (!this._children)
-      return false
+  hasChild(section) {
+    if (!this._children) return false
 
-    let candidateId = section.getId()
+    const candidateId = section.getId()
 
-    for (let i=0; i<this._children.length; i++) {
-      if (this._children[i].getId() === candidateId)
-        return true
+    for (let i = 0; i < this._children.length; i += 1) {
+      if (this._children[i].getId() === candidateId) return true
     }
-
     return false
   }
 
@@ -268,15 +259,15 @@ class Section {
    * Get the size of _this_ section
    * @return {Number}
    */
-  getSize () {
+  getSize() {
     let sum = 0
-    for (let i=0; i<this._points.length-1; i++) {
-      let p1 = this._points[i]
-      let p2 = this._points[i+1]
-      let dx = p1[0] - p2[0]
-      let dy = p1[1] - p2[1]
-      let dz = p1[2] - p2[2]
-      sum += Math.sqrt( dx*dx + dy*dy + dz*dz )
+    for (let i = 0; i < this._points.length - 1; i += 1) {
+      const p1 = this._points[i]
+      const p2 = this._points[i + 1]
+      const dx = p1[0] - p2[0]
+      const dy = p1[1] - p2[1]
+      const dz = p1[2] - p2[2]
+      sum += Math.sqrt(dx * dx + dy * dy + dz * dz)
     }
 
     return sum
@@ -287,7 +278,7 @@ class Section {
    * Get the morphology object that contains this section
    * @return {Morphology}
    */
-  getMorphology () {
+  getMorphology() {
     return this._morphology
   }
 
@@ -296,7 +287,7 @@ class Section {
    * Get all the children as an Array
    * @return {Array}
    */
-  getChildren () {
+  getChildren() {
     return this._children
   }
 }

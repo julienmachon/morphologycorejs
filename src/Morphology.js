@@ -4,8 +4,8 @@
 * Lab      Blue Brain Project, EPFL
 */
 
-import Section from './Section.js'
-import Soma from './Soma.js'
+import Section from './Section'
+import Soma from './Soma'
 
 
 /**
@@ -15,8 +15,7 @@ import Soma from './Soma.js'
  * but will generally be built using a JSON description.
  */
 class Morphology {
-
-  constructor () {
+  constructor() {
     this._id = null
     this._sections = {}
     this._soma = null
@@ -31,7 +30,7 @@ class Morphology {
    * Set the ID of _this_ morphology
    * @param {String|Number} id - the id
    */
-  setId (id) {
+  setId(id) {
     this._id = id
   }
 
@@ -40,7 +39,7 @@ class Morphology {
    * Get the ID of _this_ morphology
    * @return {String|Number}
    */
-  getId () {
+  getId() {
     return this._id
   }
 
@@ -51,37 +50,36 @@ class Morphology {
    * instance remains `null`
    * @param {Object} rawMorphology - a flat tree description of a morphology
    */
-  buildFromRawMorphology (rawMorphology) {
-    let that = this
-
+  buildFromRawMorphology(rawMorphology) {
     // Sometimes, we have no data about the soma
     if (rawMorphology.soma) {
       this._soma = new Soma()
-      this._soma.initWithRawSection( rawMorphology.soma )
+      this._soma.initWithRawSection(rawMorphology.soma)
     }
 
     // Build the Section instances.
     // This first step does not define parents nor children
-    for (let i=0; i<rawMorphology.sections.length; i++) {
-      let s = new Section(this)
-      let sId = s.initWithRawSection( rawMorphology.sections[i] )
-      this._sections[ sId ] = s
+    for (let i = 0; i < rawMorphology.sections.length; i += 1) {
+      const s = new Section(this)
+      const sId = s.initWithRawSection(rawMorphology.sections[i])
+      this._sections[sId] = s
     }
 
     // Now we define parent and children
-    for (let i=0; i<rawMorphology.sections.length; i++) {
-      let currentRawSection = rawMorphology.sections[i]
-      let currentSection = this._sections[ currentRawSection.id ]
+    for (let i = 0; i < rawMorphology.sections.length; i += 1) {
+      const currentRawSection = rawMorphology.sections[i]
+      const currentSection = this._sections[currentRawSection.id]
 
       // adding a parent if there is one
-      if (currentRawSection.parent !== null){ // can be 0 but cannot be null (in JS, 0 and null are diff)
-        let parent = this._sections[ currentRawSection.parent ]
-        currentSection.setParent( parent )
+      // can be 0 but cannot be null (in JS, 0 and null are diff)
+      if (currentRawSection.parent !== null) {
+        const parent = this._sections[currentRawSection.parent]
+        currentSection.setParent(parent)
       }
 
-      let children = currentRawSection.children.map(function(c){return that._sections[ c ]})
-      for (let c=0; c<children.length; c++) {
-        currentSection.addChild( children[c] )
+      const children = currentRawSection.children.map(c => this._sections[c])
+      for (let c = 0; c < children.length; c += 1) {
+        currentSection.addChild(children[c])
       }
     }
   }
@@ -91,8 +89,8 @@ class Morphology {
    * Retrieve the total number of section in this morphology
    * @return {Number}
    */
-  getNumberOfSections () {
-    return Object.keys( this._sections )
+  getNumberOfSections() {
+    return Object.keys(this._sections)
   }
 
 
@@ -101,12 +99,11 @@ class Morphology {
    * @param {String|Number} id - the id of a section
    * @return {Section|null} the requested section or null if the id is invalid
    */
-  getSection (id) {
+  getSection(id) {
     if (id in this._sections) {
       return this._sections[id]
-    }else{
-      return null
     }
+    return null
   }
 
 
@@ -115,8 +112,8 @@ class Morphology {
    * more convenient for iterating.
    * @return {Array} array of Section instances
    */
-  getArrayOfSections () {
-    return Object.values( this._sections )
+  getArrayOfSections() {
+    return Object.values(this._sections)
   }
 
 
@@ -124,7 +121,7 @@ class Morphology {
    * Get the soma Object
    * @return {Soma}
    */
-  getSoma () {
+  getSoma() {
     return this._soma
   }
 
@@ -135,21 +132,18 @@ class Morphology {
    * @param {Boolean} force - if true, the fetching among the sections will be done again
    * @return {Array} array of Sections
    */
-  getOrphanSections (force=false) {
-    let speciality = "orphans"
+  getOrphanSections(force = false) {
+    const speciality = 'orphans'
 
     // extract, if not done before
     this._findSpecialSection(
-      "orphans",
-      function(s){
-        return !s.getParent()
-      },
-      force
+      'orphans',
+      s => !s.getParent(),
+      force,
     )
 
     return this._specialSections[speciality]
   }
-
 
 
   /**
@@ -158,17 +152,18 @@ class Morphology {
    * @param {String} specialityName - name of the spaciality
    * @param {Function} selector - function that takes a Section and returns a boolean.
    * if true is return, a section will be selected
-   * @param {Boolean} force - if true: rebuild the list, if false: just return the list previously build
+   * @param {Boolean} force - if true: rebuild the list, if false:
+   * just return the list previously build
    */
-  _findSpecialSection (specialityName, selector, force=false) {
+  _findSpecialSection(specialityName, selector, force = false) {
     if (!(specialityName in this._specialSections)) {
       this._specialSections[specialityName] = null
     }
 
     if (force || !this._specialSections[specialityName]) {
       this._specialSections[specialityName] = []
-      let allSections = Object.values( this._sections )
-      for (let i=0; i<allSections.length; i++) {
+      const allSections = Object.values(this._sections)
+      for (let i = 0; i < allSections.length; i += 1) {
         if (selector(allSections[i])) {
           this._specialSections[specialityName].push(allSections[i])
         }
@@ -176,7 +171,6 @@ class Morphology {
     }
     return this._specialSections[specialityName]
   }
-
 }
 
 export default Morphology

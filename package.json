@@ -35,12 +35,14 @@
     "standard": "^12.0.1",
     "serve": "^10.0.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "eslintConfig": {
     "extends": "eslint-config-airbnb-base",
     "rules": {
-      "semi": ["error", "never"],
+      "semi": [
+        "error",
+        "never"
+      ],
       "no-underscore-dangle": [
         "error",
         {

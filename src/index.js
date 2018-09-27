@@ -1,11 +1,8 @@
-import Morphology from './Morphology.js'
-import Section from './Morphology.js'
-
+import Morphology from './Morphology'
 
 export default ({
   Morphology,
-  Section
 })
 
 
-//export default Morphology
+// export default Morphology
