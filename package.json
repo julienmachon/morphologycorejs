@@ -1,6 +1,6 @@
 {
   "name": "morphologycorejs",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "The description of a neuron morphology",
   "repository": "jonathanlurie/morphologycorejs",
   "main": "lib/morphologycorejs.js",
